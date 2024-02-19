@@ -15,15 +15,15 @@ def celsius_to_fahrenheit(celsius):
 
 #converts f to c
 def fahrenheit_to_celsius(fahrenheit):
-    celsius = (fahrenheit / 32) * 59
+    celsius = (fahrenheit - 32) * 5 / 9
     return celsius
 
 #conditional checkers to see valid inputs, function then executes
 if num == 1:
     result = celsius_to_fahrenheit(getUserTemp)
-    print(f"{getUserTemp} is equal to {result}")
+    print(f"{getUserTemp} Celsius is equal to {result} Fahrenheit.")
 elif num == 2:
     result = fahrenheit_to_celsius(getUserTemp)
-    print(f"{getUserTemp} is equal to {result}")
+    print(f"{getUserTemp} Fahrenheit is equal to {result} Celsius.")
 else:
     print("Invalid input. Only enter 1 or 2")
