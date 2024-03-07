@@ -1,4 +1,5 @@
 '''
+# Make sure you use diary.txt file with this py file to save/remove entries
 Assignment - File Diary
 6 February 2024
 Group: Naweed Karimi and Veronique Fick
