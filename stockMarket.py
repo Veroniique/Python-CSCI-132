@@ -6,10 +6,7 @@ Objective: Stock Market simulator. Tells user to buy, sell, stocks.
 TODO: - Show history of price(s)
     - Create a quantity list to show shares owned by user and all previous purchases
     - Create functions: - transactions
-                        - sufficient funds
-                        - update user stock count
                         - record transaction
-                        - compute networth
                         - random walk for adjusting stock prices after transaction
     - Save user data
     - Add error handling
@@ -59,50 +56,99 @@ for stock, price in stock_data.items():
     print(f"{stock}: {price}")
 
 #Task 3 - Function to buy stock
+def buy_stock(stock_data, stock_name, share_amount, user_money):
+    if stock_name not in stock_data:
+        print(f"{stock_name} does not exist")
+        return user_money
+
+    #cost calculations for buying stocks
+    stock_price = stock_data[stock_name]
+    total_cost = stock_price * share_amount
+
+    #check if user has enough money
+    if total_cost > user_money:
+        print("You don't have enough money to buy this stock")
+        return user_money
+
+    #deduct money from user funds
+    user_money -= total_cost
+
+    #update user's stock when changes are made
+    if stock_name in user_stocks:
+        user_stocks[stock_name] += share_amount
+    else:
+        user_stocks[stock_name] = share_amount
+
+    #display how much bought of stock by price and total remaining
+    print(f"You have bought {share_amount} of {stock_name} for {stock_price} per share")
+    print(f"Your remaining total: {user_money}")
+
+    return user_money
+
+#Task 3.1 - Calling function buy stock
 if user_input == 2:
     stock_name = (input("What stock do you want to buy: "))
     share_amount = int(input(f"How much of {stock_name} do you want to buy: "))
 
-    def buy_stock(stock_data, stock_name, share_amount, user_money):
-        if stock_name not in stock_data:
-            print(f"{stock_name} does not exist")
-            return user_money
+    #calling function buy_stock
+    user_money = buy_stock(stock_data, stock_name, share_amount, user_money)
 
-        #cost calculations for buying stocks
-        stock_price = stock_data[stock_name]
-        total_cost = stock_price * share_amount
-
-        #check if user has enough money
-        if total_cost > user_money:
-           print("You don't have enough money to buy this stock")
-           return user_money
-
-        #deduct money from user funds
-        user_money -= total_cost
-
-        #display how much bought of stock by price and total remaining
-        print(f"You have bought {share_amount} of {stock_name} for {stock_price} per share")
-        print(f"Your remaining total: {user_money}")
-
-        #calling function
-        user_money = buy_stock(stock_data, stock_name, share_amount, user_money)
+print("Remaining total: ", user_money)
 
 #Task 4 - Function to sell stock
-def sell_stock():
-    if user_input == 3:
-        stock_name  = input("What stock do you want to sell? ")
-        share_amount = int(input("How much of the share do you want to sell? "))
+def sell_stock(stock_data, stock_name, share_amount, user_money):
+    if stock_name not in stock_data:
+        print(f"{stock_name} does not exist")
+        return user_money
+
+    if stock_name in stock_data and stock_data[stock_name] >= share_amount:
+        stock_price = stock_data[stock_name]
+        total_earned = stock_price * share_amount
+
+        #Add money to user funds
+        user_money += total_earned
+
+        #update user stock
+        stock_data[stock_name] -= share_amount
+
+        print(f"you have sold {share_amount} of {stock_name} for {stock_price} per share.")
+        print(f"Total earnings: {total_earned}")
+        print(f"Remaining total: {user_money}")
+    else:
+        print(f"You don't have enough shares of {stock_name} to sell at this time.")
+
+    return user_money
+
+#Task 4.1 - Calling function sell stock
+if user_input == 3:
+    stock_name  = input(f"What stock do you want to sell? ")
+    share_amount = int(input(f"How much of {stock_name} do you want to sell? "))
+
+    #calling function sell stock
+    user_money = sell_stock(stock_data, stock_name, share_amount, user_money)
+
+#Task 5 - View user stocks
+def view_stocks(user_stocks, stock_data):
+    print("Your portfolio results: ")
+    total_portfolio_value = 0
+    for stock, amount in stock_data.items():
+        print(f"{stock} - {amount}")
+        print(f"Total value: {amount * stock_price}")
+        total_portfolio_value += stock_data[stock] * amount
+
+    print(f"Total portfolio value: {total_portfolio_value}")
+
+if user_input == 4:
+    view_stocks(stock_data)
+
+#Task 6 - Save user stocks
+#def save_stocks():
+
+
+#Task 7 - Exit message
 
 
 
-
-
-
-
-
-
-#Task 5 - View portfolio
-#Task 6 - Save portfolio
 
 
 '''
