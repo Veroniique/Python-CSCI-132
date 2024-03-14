@@ -21,6 +21,28 @@ user_money = 15000
 #stock dictionary with name and price list
 stock_data = {}
 
+#Function that loads up the user portfolio
+def load_portfolio():
+    portfolio = {}
+    try:
+        with open('user_portfolio.txt', 'r') as file:
+            for line in file:
+                stock_name, quantity, total_cost = line.strip().split(',')
+                portfolio[stock_name] = {'quantity': int(quantity), 'total_cost': float(total_cost)}
+    except FileNotFoundError:
+        #If file is not found, it wont do anything
+        pass
+    return portfolio
+
+#Saves users portfolio
+def save_portfolio(portfolio):
+    with open('user_portfolio.txt', 'w') as file:
+        for stock, data in portfolio.items():
+            file.write(f"{stock},{data['quantity']},{data['total_cost']}\n")
+
+#Load user portfolio from file
+user_portfolio = load_portfolio()
+
 while True:
     # user prompts
     print("Welcome to the Stock simulator\n")
@@ -74,6 +96,13 @@ while True:
         #update user's stock when changes are made
         stock_data[stock_name]['quantity'] += share_amount
 
+        #update user portfolio
+        if stock_name in user_portfolio:
+            user_portfolio[stock_name]['quantity'] += share_amount
+            user_portfolio[stock_name]['total_cost'] += total_cost
+        else:
+            user_portfolio[stock_name] = {'quantity': share_amount, 'total_cost': total_cost}
+
         #display how much bought of stock by price and total remaining
         print(f"You have bought {share_amount} of {stock_name} for {stock_price} per share")
         print(f"Your remaining total: {user_money}")
@@ -121,28 +150,22 @@ while True:
         user_money = sell_stock(stock_data, stock_name, share_amount, user_money)
 
     #Task 5 - View user stocks
-    def view_stocks(stock_data):
+    if user_input == 4:
         print("Your portfolio results: ")
         total_portfolio_value = 0
-        for stock, data in stock_data.items():
+        for stock, data in user_portfolio.items():
             #filter out stocks that are greater 0
             quantity = data['quantity']
-            if quantity > 0:
-                price = data['price']
-                total_value = quantity * price
-                #gets user total portfolio value
-                print(f"{stock} - Quantity: {quantity}, Total value: {total_value}")
-                total_portfolio_value += total_value
-
+            total_cost = data['total_cost']
+            #print(f"{stock} - Quantity: {quantity}, Total value: {total_value}")
+            print(f"{stock} - Quantity: {quantity}, Total cost: {total_cost}")
+            total_portfolio_value += total_cost
         print(f"Total portfolio value: {total_portfolio_value}")
 
-    if user_input == 4:
-        view_stocks(stock_data)
-
     #Task 6 - Save user stocks
-    #def save_stocks():
-        #if user_input == 5:
-
+    if user_input == 5:
+        save_portfolio(user_portfolio)
+        print("Portfolio successfully saved!")
 
     #Task 7 - Exit message
     if user_input == 6:
