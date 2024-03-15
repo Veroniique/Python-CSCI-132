@@ -1,0 +1,10 @@
+Rivian, 101.5
+Lego, 57
+Trek, 120.5
+Cisco, 350
+Crossrope, 126
+Subaru, 400
+Apple, 1005
+Linux, 1500
+Microsoft, 1250
+Dell, 1000
